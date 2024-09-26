@@ -25,7 +25,7 @@ export const sendMessage = async (req, res) => {
     });
 
     if (newMessage) {
-      conversation.message.push(newMessage._id);
+      conversation.messages.push(newMessage._id);
     }
 
     await Promise.all([conversation.save(), newMessage.save()]);
@@ -48,7 +48,7 @@ export const getMessage = async (req, res) => {
     const senderId = req.user._id;
 
     const conversation = await Conversation.findOne({
-      participatns: { $all: [senderId, userToChatId] },
+      participants: { $all: [senderId, userToChatId] },
     }).populate("messages");
 
     if (!conversation) return res.status(200).json([]);

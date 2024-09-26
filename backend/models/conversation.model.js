@@ -1,8 +1,8 @@
 import mongoose, { mongo } from "mongoose";
 
-const converationSchema = new mongoose.Schema(
+const conversationSchema = new mongoose.Schema(
   {
-    participats: [
+    participants: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
