@@ -1,0 +1,3 @@
+- Add show password button
+- Add timeout in every hooks
+- Deploy
