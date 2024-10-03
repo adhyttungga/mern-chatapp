@@ -6,23 +6,38 @@ const useGetConversation = () => {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     const getConversation = async () => {
       setLoading(true);
       try {
-        const res = await fetch("/api/user");
-        const data = await res.json();
-        if (data.eerror) {
-          throw new Error(data.error);
+        const res = await fetch("/api/user", { signal });
+
+        if (!signal.aborted) {
+          const data = await res.json();
+
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          setConversations(data);
         }
-        setConversations(data);
       } catch (error) {
-        toast.error(error.message);
+        if (!signal.aborted) {
+          toast.error(error.message);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     getConversation();
+
+    return () => {
+      // Cancel the request when the component unmount
+      abortController.abort();
+    };
   }, []);
 
   return { loading, conversations };
